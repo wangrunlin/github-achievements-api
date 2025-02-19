@@ -1,9 +1,35 @@
 import { UsageResponse, AchievementsResponse } from './types';
 
+// 创建 CORS 头部
+const corsHeaders = {
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Methods': 'GET, OPTIONS',
+	'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+// 创建 JSON 响应的辅助函数
+function createJsonResponse(data: any, status = 200, additionalHeaders = {}) {
+	return new Response(JSON.stringify(data, null, 2), {
+		status,
+		headers: {
+			'Content-Type': 'application/json;charset=UTF-8',
+			...corsHeaders,
+			...additionalHeaders,
+		},
+	});
+}
+
+// 创建错误响应的辅助函数
+function createErrorResponse(message: string, status = 500) {
+	return new Response(message, {
+		status,
+		headers: corsHeaders,
+	});
+}
+
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const url = new URL(request.url);
-		// 从路径中获取 username
 		const username = url.pathname.split('/')[1];
 
 		if (!username) {
@@ -27,43 +53,27 @@ export default {
 				},
 			};
 
-			return new Response(JSON.stringify(usage, null, 2), {
-				headers: {
-					'Content-Type': 'application/json;charset=UTF-8',
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'GET, OPTIONS',
-					'Access-Control-Allow-Headers': 'Content-Type',
-				},
-			});
+			return createJsonResponse(usage);
 		}
 
 		try {
-			// 使用完整 URL 作为缓存键
 			const cacheKey = `${url.origin}/cache/${username}`;
 			const cache = caches.default;
 			let response = await cache.match(cacheKey);
 
 			if (!response) {
-				// 如果缓存中没有，则请求 GitHub
 				const githubUrl = `https://github.com/${username}`;
 				const githubResponse = await fetch(githubUrl);
 
 				if (!githubResponse.ok) {
-					return new Response(`Failed to fetch GitHub achievements: ${githubResponse.statusText}`, {
-						status: githubResponse.status,
-					});
+					return createErrorResponse(`Failed to fetch GitHub achievements: ${githubResponse.statusText}`, githubResponse.status);
 				}
 
 				const html = await githubResponse.text();
-
-				// 只匹配包含 achievements 的部分
 				const achievementsSection = html.match(/<div class="d-flex flex-wrap">[\s\S]*?<\/div>/);
+
 				if (!achievementsSection) {
-					return new Response(JSON.stringify({ total: 0, achievements: [] }), {
-						headers: {
-							'Content-Type': 'application/json;charset=UTF-8',
-						},
-					});
+					return createJsonResponse({ total: 0, achievements: [] });
 				}
 
 				const achievements: { type: string; tier?: number }[] = [];
@@ -81,9 +91,8 @@ export default {
 					});
 				}
 
-				// 计算两种总数
-				const rawTotal = achievements.length; // 不计算等级的总数
-				const weightedTotal = achievements.reduce((sum, { tier = 1 }) => sum + tier, 0); // 计算等级的总数
+				const rawTotal = achievements.length;
+				const weightedTotal = achievements.reduce((sum, { tier = 1 }) => sum + tier, 0);
 
 				const result: AchievementsResponse = {
 					total: {
@@ -93,31 +102,16 @@ export default {
 					achievements: achievements.sort((a, b) => (b.tier || 1) - (a.tier || 1)),
 				};
 
-				// 创建响应
-				response = new Response(JSON.stringify(result, null, 2), {
-					headers: {
-						'Content-Type': 'application/json;charset=UTF-8',
-						'Cache-Control': 'public, max-age=3600', // 缓存1小时
-						'Access-Control-Allow-Origin': '*',
-						'Access-Control-Allow-Methods': 'GET, OPTIONS',
-						'Access-Control-Allow-Headers': 'Content-Type',
-					},
+				response = createJsonResponse(result, 200, {
+					'Cache-Control': 'public, max-age=3600',
 				});
 
-				// 使用 Request 对象来存储缓存
 				ctx.waitUntil(cache.put(new Request(cacheKey), response.clone()));
 			}
 
 			return response;
 		} catch (error: unknown) {
-			return new Response(`Error: ${error}`, {
-				status: 500,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'GET, OPTIONS',
-					'Access-Control-Allow-Headers': 'Content-Type',
-				},
-			});
+			return createErrorResponse(`Error: ${error}`);
 		}
 	},
 } satisfies ExportedHandler<Env>;
