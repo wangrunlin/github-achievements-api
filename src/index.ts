@@ -30,6 +30,9 @@ export default {
 			return new Response(JSON.stringify(usage, null, 2), {
 				headers: {
 					'Content-Type': 'application/json;charset=UTF-8',
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET, OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type',
 				},
 			});
 		}
@@ -95,6 +98,9 @@ export default {
 					headers: {
 						'Content-Type': 'application/json;charset=UTF-8',
 						'Cache-Control': 'public, max-age=3600', // 缓存1小时
+						'Access-Control-Allow-Origin': '*',
+						'Access-Control-Allow-Methods': 'GET, OPTIONS',
+						'Access-Control-Allow-Headers': 'Content-Type',
 					},
 				});
 
@@ -106,6 +112,11 @@ export default {
 		} catch (error: unknown) {
 			return new Response(`Error: ${error}`, {
 				status: 500,
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET, OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type',
+				},
 			});
 		}
 	},
