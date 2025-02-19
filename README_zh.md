@@ -5,47 +5,47 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/commits)
 [![Test Status](https://img.shields.io/github/actions/workflow/status/wangrunlin/github-achievements-api/test.yml?label=test)](https://github.com/wangrunlin/github-achievements-api/actions)
 
-English | [简体中文](README_zh.md)
+[English](README.md) | 简体中文
 
-A simple API service for retrieving GitHub user achievements information. Built with Cloudflare Workers.
+一个简单的 API 服务，用于获取 GitHub 用户的成就信息。基于 Cloudflare Workers 构建。
 
-## Live Demo
+## 在线使用
 
 - [https://github-achievements-api.wangrunlin.workers.dev](https://github-achievements-api.wangrunlin.workers.dev)
 
-## Deploy to Cloudflare Workers
+## 部署到 Cloudflare Workers
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/wangrunlin/github-achievements-api)
 
-## Features
+## 功能特点
 
-- Fetch GitHub user achievement list
-- Support for achievement tier statistics
-- Provide raw and weighted achievement counts
-- Automatic result caching (1 hour) for better performance
-- Deployed on Cloudflare Workers for low-latency global access
+- 获取用户的 GitHub 成就列表
+- 支持成就等级统计
+- 提供原始成就数量和加权成就数量
+- 自动缓存结果（1 小时）以提高性能
+- 使用 Cloudflare Workers 部署，低延迟全球访问
 
-## API Usage
+## API 使用说明
 
-### Base Endpoint
+### 基本端点
 
 ```http
 GET https://<your-worker>.workers.dev/<github_username>
 ```
 
-### Example Request
+### 示例请求
 
 ```http
 GET https://<your-worker>.workers.dev/wangrunlin
 ```
 
-### Response Format
+### 响应格式
 
 ```json
 {
 	"total": {
-		"raw": 5, // Raw achievement count (without tiers)
-		"weighted": 8 // Weighted achievement count (with tiers)
+		"raw": 5, // 原始成就数量（不计算等级）
+		"weighted": 8 // 加权成就数量（计算等级）
 	},
 	"achievements": [
 		{
@@ -65,71 +65,71 @@ GET https://<your-worker>.workers.dev/wangrunlin
 }
 ```
 
-## Local Development
+## 本地开发
 
-### Prerequisites
+### 前置要求
 
 - Node.js 18+
 - pnpm
 
-### Install Dependencies
+### 安装依赖
 
 ```bash
 pnpm install
 ```
 
-### Run Locally
+### 本地运行
 
 ```bash
 pnpm dev
 ```
 
-### Run Tests
+### 运行测试
 
 ```bash
 pnpm test
 ```
 
-## Deployment
+## 部署
 
-1. Login to Cloudflare
+1. 登录到 Cloudflare
 
 ```bash
 pnpm dlx wrangler login
 ```
 
-2. Deploy Worker
+2. 部署 Worker
 
 ```bash
 pnpm deploy
 ```
 
-## Tech Stack
+## 技术栈
 
 - TypeScript
 - Cloudflare Workers
-- Vitest (Testing Framework)
-- Wrangler (Development & Deployment Tool)
+- Vitest (测试框架)
+- Wrangler (开发&部署工具)
 
-## License
+## 许可证
 
 MIT
 
-## Contributing
+## 贡献指南
 
-Issues and Pull Requests are welcome!
+欢迎提交 Issue 和 Pull Request！
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork 本仓库
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启一个 Pull Request
 
-## Author
+## 作者
 
 [Leo Wang](https://github.com/wangrunlin)
 
-## Acknowledgments
+## 致谢
 
-- GitHub Achievement System
-- Cloudflare Workers Platform
+- GitHub 提供的成就系统
+- Cloudflare Workers 平台
