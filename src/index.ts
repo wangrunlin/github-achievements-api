@@ -35,6 +35,11 @@ export default {
 		if (!username) {
 			const usage: UsageResponse = {
 				description: 'GitHub Achievements API - 获取用户的 GitHub 成就信息',
+				author: {
+					name: 'Leo Wang',
+					github: 'https://github.com/wangrunlin',
+				},
+				repository: 'https://github.com/wangrunlin/github-achievements-api',
 				usage: {
 					endpoint: `${url.origin}/<github_username>`,
 					example: `${url.origin}/wangrunlin`,
@@ -59,7 +64,8 @@ export default {
 		try {
 			const cacheKey = `${url.origin}/cache/${username}`;
 			const cache = caches.default;
-			let response = await cache.match(cacheKey);
+			const skipCache = url.searchParams.has('nocache');
+			let response = skipCache ? null : await cache.match(cacheKey);
 
 			if (!response) {
 				const githubUrl = `https://github.com/${username}`;
@@ -103,10 +109,12 @@ export default {
 				};
 
 				response = createJsonResponse(result, 200, {
-					'Cache-Control': 'public, max-age=3600',
+					'Cache-Control': skipCache ? 'no-store' : 'public, max-age=3600',
 				});
 
-				ctx.waitUntil(cache.put(new Request(cacheKey), response.clone()));
+				if (!skipCache) {
+					ctx.waitUntil(cache.put(new Request(cacheKey), response.clone()));
+				}
 			}
 
 			return response;

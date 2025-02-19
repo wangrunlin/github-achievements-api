@@ -1,5 +1,10 @@
 export interface UsageResponse {
   description: string;
+  author: {
+    name: string;
+    github: string;
+  };
+  repository: string;
   usage: {
     endpoint: string;
     example: string;
@@ -9,10 +14,10 @@ export interface UsageResponse {
       raw: string;
       weighted: string;
     };
-    achievements: Array<{
+    achievements: {
       type: string;
       tier: string;
-    }>;
+    }[];
   };
 }
 

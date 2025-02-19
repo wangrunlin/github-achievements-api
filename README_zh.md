@@ -1,9 +1,22 @@
 # GitHub Achievements API
 
+<p align="center">
+  <img src="https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png" width="100" height="100" alt="Pull Shark 成就" />
+</p>
+
 [![License](https://img.shields.io/github/license/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/blob/main/LICENSE)
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/blob/main/package.json)
 [![GitHub last commit](https://img.shields.io/github/last-commit/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/commits)
 [![Test Status](https://img.shields.io/github/actions/workflow/status/wangrunlin/github-achievements-api/test.yml?label=test)](https://github.com/wangrunlin/github-achievements-api/actions)
+[![Node Version](https://img.shields.io/node/v/github-achievements-api)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.2-blue.svg)](https://www.typescriptlang.org/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://makeapullrequest.com)
+[![GitHub stars](https://img.shields.io/github/stars/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/network)
+[![GitHub issues](https://img.shields.io/github/issues/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/issues)
+[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=wangrunlin.github-achievements-api)](https://github.com/wangrunlin/github-achievements-api)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange)](https://ko-fi.com/wangrunlin)
 
 [English](README.md) | 简体中文
 
@@ -64,6 +77,56 @@ GET https://<your-worker>.workers.dev/wangrunlin
 	]
 }
 ```
+
+## API 文档
+
+### 速率限制
+
+本 API 继承了 GitHub 的速率限制。请注意在发送请求时遵守 GitHub 的速率限制规则。
+
+### 缓存机制
+
+- 响应结果缓存时间为 1 小时，以提高性能
+- 当获得新成就时，缓存会自动失效
+- 可以通过在请求中添加 `?nocache=true` 来绕过缓存
+
+### 错误响应
+
+| 状态码 | 描述           |
+| ------ | -------------- |
+| 404    | 用户未找到     |
+| 429    | 超出速率限制   |
+| 500    | 内部服务器错误 |
+
+错误响应示例：
+
+```json
+{
+	"error": "Failed to fetch GitHub achievements: Not Found"
+}
+```
+
+## 项目路线图
+
+- [ ] 添加成就描述支持
+- [ ] 添加成就获得日期支持
+- [ ] 添加成就图片支持
+- [ ] 添加 API 密钥认证
+- [ ] 添加更详细的统计信息
+- [ ] 添加组织成就支持
+- [ ] 添加新成就获得时的 webhook 通知
+
+## 赞助商
+
+成为赞助商来支持这个项目。您的 logo 将会出现在这里并链接到您的网站。
+
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/wangrunlin)
+
+[其他赞助方式](https://alin.run/sponsor)
+
+## 谁在使用 GitHub Achievements API？
+
+您正在使用这个 API 吗？[告诉我们](https://github.com/wangrunlin/github-achievements-api/issues/new)，我们会在这里添加您的 logo！
 
 ## 本地开发
 
@@ -129,7 +192,32 @@ MIT
 
 [Leo Wang](https://github.com/wangrunlin)
 
+## 可获得的成就
+
+以下是目前 GitHub 上可获得的所有成就：
+
+[查看更多 GitHub 成就相关信息](https://github.com/drknzz/GitHub-Achievements)
+
+| 成就图标                                                                                                                               | 名称                  | 描述                                    | 最高等级 |
+| -------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | --------------------------------------- | -------- |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/starstruck-default.png" width="60px">                    | Starstruck            | 创建的仓库获得 16 个星标                | 4        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/quickdraw-default.png" width="60px">                     | Quickdraw             | 在开启后 5 分钟内关闭了 Issue 或 PR     | 1        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/pair-extraordinaire-default.png" width="60px">           | Pair Extraordinaire   | 在已合并的 PR 中作为合作者              | 3        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png" width="60px">                    | Pull Shark            | 创建的 PR 被合并                        | 3        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/galaxy-brain-default.png" width="60px">                  | Galaxy Brain          | 在讨论中的回答被采纳                    | 4        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/yolo-default.png" width="60px">                          | YOLO                  | 在没有代码审查的情况下合并 PR           | 1        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/arctic-code-vault-contributor-default.png" width="60px"> | Arctic Code Vault     | 为 2020 GitHub 存档计划中的仓库贡献代码 | 1        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/public-sponsor-default.png" width="60px">                | Public Sponsor        | 通过 GitHub Sponsors 赞助开源贡献者     | 1        |
+| <img src="https://github.githubassets.com/images/modules/profile/achievements/mars-2020-contributor-default.png" width="60px">         | Mars 2020 Contributor | 为火星 2020 任务中使用的仓库贡献代码    | 1        |
+
 ## 致谢
 
-- GitHub 提供的成就系统
-- Cloudflare Workers 平台
+感谢这些优秀的项目和资源：
+
+- [GitHub](https://github.com) - 提供成就系统
+- [Cloudflare Workers](https://workers.cloudflare.com) - 提供无服务器平台
+- [GitHub Achievements List](https://github.com/drknzz/GitHub-Achievements) - 提供完整的成就文档
+- [TypeScript](https://www.typescriptlang.org) - 提供类型化的 JavaScript
+- [Vitest](https://vitest.dev) - 提供测试框架
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) - 提供开发和部署工具
+- [pnpm](https://pnpm.io) - 提供快速的包管理器
