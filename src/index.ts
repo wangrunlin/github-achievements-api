@@ -82,18 +82,19 @@ export default {
 					return createJsonResponse({ total: 0, achievements: [] });
 				}
 
-				const achievements: { type: string; tier?: number }[] = [];
+				const achievements: { type: string; tier?: number; image?: string }[] = [];
 				const pattern = new RegExp(
-					`<a[^>]*href="/${username}\\?achievement=([^&]+)[^>]*>.*?(?:class="Label[^>]*achievement-tier-label[^>]*>x(\\d+))?(?:</span>)?</a>`,
+					`<a[^>]*href="/${username}\\?achievement=([^&]+)[^>]*>\\s*<img\\s+src="([^"]+)"[^>]*>.*?(?:class="Label[^>]*achievement-tier-label[^>]*>x(\\d+))?(?:</span>)?</a>`,
 					'gs'
 				);
 
 				let match;
 				while ((match = pattern.exec(achievementsSection[0])) !== null) {
-					const [, type, tier] = match;
+					const [, type, imgSrc, tier] = match;
 					achievements.push({
 						type: type.trim(),
 						tier: tier ? parseInt(tier) : 1,
+						image: imgSrc
 					});
 				}
 
