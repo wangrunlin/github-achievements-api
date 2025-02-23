@@ -90,11 +90,11 @@ export default {
 
 				let match;
 				while ((match = pattern.exec(achievementsSection[0])) !== null) {
-					const [, type, imgSrc, tier] = match;
+					const [, type, image, tier] = match;
 					achievements.push({
 						type: type.trim(),
 						tier: tier ? parseInt(tier) : 1,
-						image: imgSrc
+						image
 					});
 				}
 
