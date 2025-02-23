@@ -1,33 +1,21 @@
 export interface UsageResponse {
   description: string;
-  author: {
-    name: string;
-    github: string;
-  };
+  author: Record<'name' | 'github', string>;
   repository: string;
-  usage: {
-    endpoint: string;
-    example: string;
-  };
+  usage: Record<'endpoint' | 'example', string>;
   response: {
-    total: {
-      raw: string;
-      weighted: string;
-    };
-    achievements: {
-      type: string;
-      tier: string;
-    }[];
+    total: Record<keyof AchievementsResponse['total'], string>;
+    achievements: Record<keyof Achievement, string>[];
   };
 }
 
+export interface Achievement {
+  type: string;
+  image: string;
+  tier: number;
+}
+
 export interface AchievementsResponse {
-  total: {
-    raw: number;
-    weighted: number;
-  };
-  achievements: Array<{
-    type: string;
-    tier?: number;
-  }>;
-} 
+  total: Record<'raw' | 'weighted', number>;
+  achievements: Achievement[];
+}
