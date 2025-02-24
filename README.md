@@ -110,7 +110,7 @@ Example error response:
 
 - [ ] Add support for achievement descriptions
 - [ ] Add support for achievement dates
-- [ ] Add support for achievement images
+- [x] Add support for achievement images
 - [ ] Add API key authentication
 - [ ] Add more detailed statistics
 - [ ] Add support for organization achievements
