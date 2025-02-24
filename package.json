@@ -7,7 +7,7 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
-    "test": "lint-staged && vitest",
+    "test": "lint-staged  &&  vitest --run",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
