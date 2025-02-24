@@ -52,7 +52,10 @@ const usageOf = (origin: string): UsageResponse => ({
 });
 
 class HTTPError extends Error {
-  constructor(message: string, public readonly response: Response) {
+  constructor(
+    message: string,
+    public readonly response: Response,
+  ) {
     super(message);
   }
 }
@@ -64,8 +67,10 @@ const loadAchievements = async (username: string) => {
 
   const { document } = parseHTML(await githubResponse.text());
 
-  const achievements = [...document.querySelectorAll('.achievement-card')].map((card) => {
-    const type = card.querySelector('h3')!.textContent!.trim(),
+  const achievements = [
+    ...document.querySelectorAll<HTMLDetailsElement>('.js-achievement-card-details'),
+  ].map((card) => {
+    const type = card.dataset.achievementSlug,
       tier = card.querySelector('.achievement-tier-label')?.textContent?.trim().slice(1) || '1',
       image = card.querySelector<HTMLImageElement>('.achievement-badge-card')!.src;
 
@@ -102,14 +107,17 @@ const fetch: ExportedHandler['fetch'] = async (request, env, ctx) => {
     });
     if (!skipCache)
       ctx.waitUntil(
-        cache.put(new Request(cacheKey) as unknown as CF_Req, response.clone() as unknown as CF_Res)
+        cache.put(
+          new Request(cacheKey) as unknown as CF_Req,
+          response.clone() as unknown as CF_Res,
+        ),
       );
     return response;
   } catch (error: unknown) {
     return error instanceof HTTPError
       ? createErrorResponse(
           `Failed to fetch GitHub achievements: ${error.response.statusText}`,
-          error.response.status
+          error.response.status,
         )
       : createErrorResponse(`Error: ${error}`);
   }
