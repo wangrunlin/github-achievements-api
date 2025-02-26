@@ -3,4 +3,5 @@ main = "src/index.ts"
 compatibility_date = "2025-02-27"
 
 [env.preview]
-name = "github-achievements-api-preview" 
+name = "github-achievements-api-preview"
+# Asegúrate de que el entorno de vista previa tenga la misma configuración que el entorno principal 
