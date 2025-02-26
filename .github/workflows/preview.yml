@@ -42,7 +42,7 @@ jobs:
           echo "url=$PREVIEW_URL" >> $GITHUB_OUTPUT
       
       - name: Comment on commit
-        uses: peter-evans/commit-comment@v2
+        uses: peter-evans/commit-comment@v3
         with:
           body: |
             🚀 Preview deployment is ready!
