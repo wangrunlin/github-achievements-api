@@ -26,28 +26,7 @@ jobs:
         run: pnpm install
 
       - name: Deploy to Cloudflare Workers with Preview
-        id: deploy-preview
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           command: deploy --env preview
-      
-      - name: Get deployment URL
-        id: deployment-url
-        run: |
-          PREVIEW_URL=$(echo '${{ steps.deploy-preview.outputs.deployedUrl }}')
-          if [ -z "$PREVIEW_URL" ]; then
-            PREVIEW_URL="https://github-achievements-api-preview.wangrunlin.workers.dev"
-          fi
-          echo "url=$PREVIEW_URL" >> $GITHUB_OUTPUT
-      
-      - name: Comment on commit
-        uses: peter-evans/commit-comment@v3
-        with:
-          body: |
-            🚀 Preview deployment is ready!
-            
-            🔗 [Preview Link](${{ steps.deployment-url.outputs.url }})
-            
-            Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}

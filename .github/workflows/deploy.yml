@@ -26,28 +26,7 @@ jobs:
         run: pnpm install
 
       - name: Deploy to Cloudflare Workers
-        id: deploy-production
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           command: deploy
-
-      - name: Get deployment URL
-        id: deployment-url
-        run: |
-          PRODUCTION_URL=$(echo '${{ steps.deploy-production.outputs.deployedUrl }}')
-          if [ -z "$PRODUCTION_URL" ]; then
-            PRODUCTION_URL="https://github-achievements-api.wangrunlin.workers.dev"
-          fi
-          echo "url=$PRODUCTION_URL" >> $GITHUB_OUTPUT
-
-      - name: Comment on commit
-        uses: peter-evans/commit-comment@v3
-        with:
-          body: |
-            🚀 Production deployment is ready!
-
-            🔗 [Production Link](${{ steps.deployment-url.outputs.url }})
-
-            Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}
