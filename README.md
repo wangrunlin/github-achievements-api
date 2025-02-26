@@ -158,17 +158,26 @@ pnpm test
 
 ## Deployment
 
-1.  Login to Cloudflare
+This project uses GitHub Actions to automatically deploy to Cloudflare Workers:
 
-```bash
-pnpm dlx wrangler login
-```
+- Commits to non-main branches create preview deployments
+- Commits to main branch deploy to production
 
-2.  Deploy Worker
+### Setup GitHub Secrets
 
-```bash
-pnpm deploy
-```
+To enable automatic deployments, you need to add the following secrets to your GitHub repository:
+
+1. Go to your repository on GitHub
+2. Navigate to Settings > Secrets and variables > Actions
+3. Add the following secrets:
+   - `CF_API_TOKEN`: Your Cloudflare API token with Workers permissions
+
+### How to get Cloudflare credentials
+
+1. **Cloudflare API Token**:
+   - Go to the [Cloudflare dashboard](https://dash.cloudflare.com/)
+   - Navigate to My Profile > API Tokens
+   - Create a new token with "Edit Workers" permissions
 
 ## Tech Stack
 

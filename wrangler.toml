@@ -1,0 +1,6 @@
+name = "github-achievements-api"
+main = "src/index.ts"
+compatibility_date = "2025-02-27"
+
+[env.preview]
+name = "github-achievements-api-preview" 

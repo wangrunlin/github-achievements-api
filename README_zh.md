@@ -158,17 +158,27 @@ pnpm test
 
 ## 部署
 
-1.  登录到 Cloudflare
+本项目使用 GitHub Actions 自动部署到 Cloudflare Workers：
 
-```bash
-pnpm dlx wrangler login
-```
+- 向非主分支提交代码会创建预览部署
+- 向主分支提交代码会部署到生产环境
 
-2.  部署 Worker
+### 设置 GitHub Secrets
 
-```bash
-pnpm deploy
-```
+要启用自动部署，您需要在 GitHub 仓库中添加以下密钥：
+
+1. 前往您的 GitHub 仓库
+2. 导航到 Settings > Secrets and variables > Actions
+3. 添加以下密钥：
+   - `CF_API_TOKEN`：您的 Cloudflare API 令牌（需要 Workers 权限）
+
+### 如何获取 Cloudflare 凭据
+
+1. **Cloudflare API 令牌**：
+
+   - 前往 [Cloudflare 控制面板](https://dash.cloudflare.com/)
+   - 导航到 My Profile > API Tokens
+   - 创建一个具有"Edit Workers"权限的新令牌
 
 ## 技术栈
 
