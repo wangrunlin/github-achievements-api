@@ -1,126 +1,126 @@
-import { UsageResponse, AchievementsResponse } from './types';
+import { CacheStorage, Request as CF_Req, Response as CF_Res } from '@cloudflare/workers-types';
+import { parseHTML } from 'linkedom';
+
+import { Achievement, AchievementsResponse, UsageResponse } from './types';
 
 // 创建 CORS 头部
 const corsHeaders = {
-	'Access-Control-Allow-Origin': '*',
-	'Access-Control-Allow-Methods': 'GET, OPTIONS',
-	'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
 
 // 创建 JSON 响应的辅助函数
-function createJsonResponse(data: any, status = 200, additionalHeaders = {}) {
-	return new Response(JSON.stringify(data, null, 2), {
-		status,
-		headers: {
-			'Content-Type': 'application/json;charset=UTF-8',
-			...corsHeaders,
-			...additionalHeaders,
-		},
-	});
-}
+const createJsonResponse = (data: any, status = 200, additionalHeaders = {}) =>
+  new Response(JSON.stringify(data, null, 2), {
+    status,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      ...corsHeaders,
+      ...additionalHeaders,
+    },
+  });
 
 // 创建错误响应的辅助函数
-function createErrorResponse(message: string, status = 500) {
-	return new Response(message, {
-		status,
-		headers: corsHeaders,
-	});
+const createErrorResponse = (message: string, status = 500) =>
+  new Response(message, { status, headers: corsHeaders });
+
+const usageOf = (origin: string): UsageResponse => ({
+  description: 'GitHub Achievements API - 获取用户的 GitHub 成就信息',
+  author: {
+    name: 'Leo Wang',
+    github: 'https://github.com/wangrunlin',
+  },
+  repository: 'https://github.com/wangrunlin/github-achievements-api',
+  usage: {
+    endpoint: `${origin}/<github_username>`,
+    example: `${origin}/wangrunlin`,
+  },
+  response: {
+    total: {
+      raw: '成就总数（不计算等级）',
+      weighted: '成就总数（计算等级）',
+    },
+    achievements: [
+      {
+        type: '成就类型',
+        tier: '成就等级（若无等级则为1）',
+        image: '成就图标 URL',
+      },
+    ],
+  },
+});
+
+class HTTPError extends Error {
+  constructor(
+    message: string,
+    public readonly response: Response,
+  ) {
+    super(message);
+  }
 }
 
-export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		const url = new URL(request.url);
-		const username = url.pathname.split('/')[1];
+const loadAchievements = async (username: string) => {
+  const githubResponse = await globalThis.fetch(`https://github.com/${username}?tab=achievements`);
 
-		if (!username) {
-			const usage: UsageResponse = {
-				description: 'GitHub Achievements API - 获取用户的 GitHub 成就信息',
-				author: {
-					name: 'Leo Wang',
-					github: 'https://github.com/wangrunlin',
-				},
-				repository: 'https://github.com/wangrunlin/github-achievements-api',
-				usage: {
-					endpoint: `${url.origin}/<github_username>`,
-					example: `${url.origin}/wangrunlin`,
-				},
-				response: {
-					total: {
-						raw: '成就总数（不计算等级）',
-						weighted: '成就总数（计算等级）',
-					},
-					achievements: [
-						{
-							type: '成就类型',
-							tier: '成就等级（若无等级则为1）',
-						},
-					],
-				},
-			};
+  if (!githubResponse.ok) throw new HTTPError(githubResponse.statusText, githubResponse);
 
-			return createJsonResponse(usage);
-		}
+  const { document } = parseHTML(await githubResponse.text());
 
-		try {
-			const cacheKey = `${url.origin}/cache/${username}`;
-			const cache = caches.default;
-			const skipCache = url.searchParams.has('nocache');
-			let response = skipCache ? null : await cache.match(cacheKey);
+  const achievements = [
+    ...document.querySelectorAll<HTMLDetailsElement>('.js-achievement-card-details'),
+  ].map((card) => {
+    const type = card.dataset.achievementSlug,
+      tier = card.querySelector('.achievement-tier-label')?.textContent?.trim().slice(1) || '1',
+      image = card.querySelector<HTMLImageElement>('.achievement-badge-card')!.src;
 
-			if (!response) {
-				const githubUrl = `https://github.com/${username}`;
-				const githubResponse = await fetch(githubUrl);
+    return { type, tier: +tier, image } as Achievement;
+  });
 
-				if (!githubResponse.ok) {
-					return createErrorResponse(`Failed to fetch GitHub achievements: ${githubResponse.statusText}`, githubResponse.status);
-				}
+  return {
+    total: {
+      raw: achievements.length,
+      weighted: achievements.reduce((sum, { tier }) => sum + tier, 0),
+    },
+    achievements: achievements.sort((a, b) => b.tier - a.tier),
+  } as AchievementsResponse;
+};
 
-				const html = await githubResponse.text();
-				const achievementsSection = html.match(/<div class="d-flex flex-wrap">[\s\S]*?<\/div>/);
+const fetch: ExportedHandler['fetch'] = async (request, env, ctx) => {
+  const { origin, pathname, searchParams } = new URL(request.url);
+  const [, username] = pathname.split('/');
 
-				if (!achievementsSection) {
-					return createJsonResponse({ total: 0, achievements: [] });
-				}
+  if (!username) return createJsonResponse(usageOf(origin));
 
-				const achievements: { type: string; tier?: number; image?: string }[] = [];
-				const pattern = new RegExp(
-					`<a[^>]*href="/${username}\\?achievement=([^&]+)[^>]*>\\s*<img\\s+src="([^"]+)"[^>]*>.*?(?:class="Label[^>]*achievement-tier-label[^>]*>x(\\d+))?(?:</span>)?</a>`,
-					'gs'
-				);
+  try {
+    const cacheKey = `${origin}/cache/${username}`;
+    const cache = (caches as unknown as CacheStorage).default;
+    const skipCache = searchParams.has('nocache');
+    const cacheResponse = !skipCache && (await cache.match(cacheKey));
 
-				let match;
-				while ((match = pattern.exec(achievementsSection[0])) !== null) {
-					const [, type, image, tier] = match;
-					achievements.push({
-						type: type.trim(),
-						tier: tier ? parseInt(tier) : 1,
-						image
-					});
-				}
+    if (cacheResponse) return cacheResponse as unknown as Response;
 
-				const rawTotal = achievements.length;
-				const weightedTotal = achievements.reduce((sum, { tier = 1 }) => sum + tier, 0);
+    const result = await loadAchievements(username);
 
-				const result: AchievementsResponse = {
-					total: {
-						raw: rawTotal,
-						weighted: weightedTotal,
-					},
-					achievements: achievements.sort((a, b) => (b.tier || 1) - (a.tier || 1)),
-				};
+    const response = createJsonResponse(result, 200, {
+      'Cache-Control': skipCache ? 'no-store' : 'public, max-age=3600',
+    });
+    if (!skipCache)
+      ctx.waitUntil(
+        cache.put(
+          new Request(cacheKey) as unknown as CF_Req,
+          response.clone() as unknown as CF_Res,
+        ),
+      );
+    return response;
+  } catch (error: unknown) {
+    return error instanceof HTTPError
+      ? createErrorResponse(
+          `Failed to fetch GitHub achievements: ${error.response.statusText}`,
+          error.response.status,
+        )
+      : createErrorResponse(`Error: ${error}`);
+  }
+};
 
-				response = createJsonResponse(result, 200, {
-					'Cache-Control': skipCache ? 'no-store' : 'public, max-age=3600',
-				});
-
-				if (!skipCache) {
-					ctx.waitUntil(cache.put(new Request(cacheKey), response.clone()));
-				}
-			}
-
-			return response;
-		} catch (error: unknown) {
-			return createErrorResponse(`Error: ${error}`);
-		}
-	},
-} satisfies ExportedHandler<Env>;
+export default { fetch } satisfies ExportedHandler<Env>;

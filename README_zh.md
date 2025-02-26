@@ -4,31 +4,31 @@
   <img src="https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png" width="100" height="100" alt="Pull Shark 成就" />
 </p>
 
-[![License](https://img.shields.io/github/license/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/blob/main/LICENSE)
-[![GitHub package.json version](https://img.shields.io/github/package-json/v/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/blob/main/package.json)
-[![GitHub last commit](https://img.shields.io/github/last-commit/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/commits)
-[![Test Status](https://img.shields.io/github/actions/workflow/status/wangrunlin/github-achievements-api/test.yml?label=test)](https://github.com/wangrunlin/github-achievements-api/actions)
-[![Node Version](https://img.shields.io/node/v/github-achievements-api)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.2-blue.svg)](https://www.typescriptlang.org/)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://makeapullrequest.com)
-[![GitHub stars](https://img.shields.io/github/stars/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/network)
-[![GitHub issues](https://img.shields.io/github/issues/wangrunlin/github-achievements-api)](https://github.com/wangrunlin/github-achievements-api/issues)
-[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=wangrunlin.github-achievements-api)](https://github.com/wangrunlin/github-achievements-api)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange)](https://ko-fi.com/wangrunlin)
+[![License](https://img.shields.io/github/license/wangrunlin/github-achievements-api)][1]
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/wangrunlin/github-achievements-api)][2]
+[![GitHub last commit](https://img.shields.io/github/last-commit/wangrunlin/github-achievements-api)][3]
+[![Test Status](https://img.shields.io/github/actions/workflow/status/wangrunlin/github-achievements-api/test.yml?label=test)][4]
+[![Node Version](https://img.shields.io/node/v/github-achievements-api)][5]
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.2-blue.svg)][6]
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)][7]
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][8]
+[![GitHub stars](https://img.shields.io/github/stars/wangrunlin/github-achievements-api)][9]
+[![GitHub forks](https://img.shields.io/github/forks/wangrunlin/github-achievements-api)][10]
+[![GitHub issues](https://img.shields.io/github/issues/wangrunlin/github-achievements-api)][11]
+[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=wangrunlin.github-achievements-api)][12]
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange)][13]
 
-[English](README.md) | 简体中文
+[English][14] | 简体中文
 
 一个简单的 API 服务，用于获取 GitHub 用户的成就信息。基于 Cloudflare Workers 构建。
 
 ## 在线使用
 
-- [https://github-achievements-api.wangrunlin.workers.dev](https://github-achievements-api.wangrunlin.workers.dev)
+- [https://github-achievements-api.wangrunlin.workers.dev][15]
 
 ## 部署到 Cloudflare Workers
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/wangrunlin/github-achievements-api)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)][16]
 
 ## 功能特点
 
@@ -56,25 +56,28 @@ GET https://<your-worker>.workers.dev/wangrunlin
 
 ```json
 {
-	"total": {
-		"raw": 5, // 原始成就数量（不计算等级）
-		"weighted": 8 // 加权成就数量（计算等级）
-	},
-	"achievements": [
-		{
-			"type": "pair-extraordinaire",
-			"tier": 3
-		},
-		{
-			"type": "pull-shark",
-			"tier": 2
-		},
-		{
-			"type": "quickdraw",
-			"tier": 1
-		}
-		// ...
-	]
+  "total": {
+    "raw": 5, // 原始成就数量（不计算等级）
+    "weighted": 8 // 加权成就数量（计算等级）
+  },
+  "achievements": [
+    {
+      "type": "pair-extraordinaire",
+      "tier": 3,
+      "image": "https://some.cdn.com/path/to/pair-extraordinaire.png"
+    },
+    {
+      "type": "pull-shark",
+      "tier": 2,
+      "image": "https://some.cdn.com/path/to/pull-shark.png"
+    },
+    {
+      "type": "quickdraw",
+      "tier": 1,
+      "image": "https://some.cdn.com/path/to/quickdraw.png"
+    }
+    // ...
+  ]
 }
 ```
 
@@ -102,7 +105,7 @@ GET https://<your-worker>.workers.dev/wangrunlin
 
 ```json
 {
-	"error": "Failed to fetch GitHub achievements: Not Found"
+  "error": "Failed to fetch GitHub achievements: Not Found"
 }
 ```
 
@@ -110,7 +113,7 @@ GET https://<your-worker>.workers.dev/wangrunlin
 
 - [ ] 添加成就描述支持
 - [ ] 添加成就获得日期支持
-- [ ] 添加成就图片支持
+- [x] 添加成就图片支持
 - [ ] 添加 API 密钥认证
 - [ ] 添加更详细的统计信息
 - [ ] 添加组织成就支持
@@ -120,13 +123,13 @@ GET https://<your-worker>.workers.dev/wangrunlin
 
 成为赞助商来支持这个项目。您的 logo 将会出现在这里并链接到您的网站。
 
-[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/wangrunlin)
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)][17]
 
-[其他赞助方式](https://alin.run/sponsor)
+[其他赞助方式][18]
 
 ## 谁在使用 GitHub Achievements API？
 
-您正在使用这个 API 吗？[告诉我们](https://github.com/wangrunlin/github-achievements-api/issues/new)，我们会在这里添加您的 logo！
+您正在使用这个 API 吗？[告诉我们][19]，我们会在这里添加您的 logo！
 
 ## 本地开发
 
@@ -155,13 +158,13 @@ pnpm test
 
 ## 部署
 
-1. 登录到 Cloudflare
+1.  登录到 Cloudflare
 
 ```bash
 pnpm dlx wrangler login
 ```
 
-2. 部署 Worker
+2.  部署 Worker
 
 ```bash
 pnpm deploy
@@ -182,21 +185,21 @@ MIT
 
 欢迎提交 Issue 和 Pull Request！
 
-1. Fork 本仓库
-2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启一个 Pull Request
+1.  Fork 本仓库
+2.  创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3.  提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
+4.  推送到分支 (`git push origin feature/AmazingFeature`)
+5.  开启一个 Pull Request
 
 ## 作者
 
-[Leo Wang](https://github.com/wangrunlin)
+[Leo Wang][20]
 
 ## 可获得的成就
 
 以下是目前 GitHub 上可获得的所有成就：
 
-[查看更多 GitHub 成就相关信息](https://github.com/drknzz/GitHub-Achievements)
+[查看更多 GitHub 成就相关信息][21]
 
 | 成就图标                                                                                                                               | 名称                  | 描述                                    | 最高等级 |
 | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | --------------------------------------- | -------- |
@@ -214,10 +217,39 @@ MIT
 
 感谢这些优秀的项目和资源：
 
-- [GitHub](https://github.com) - 提供成就系统
-- [Cloudflare Workers](https://workers.cloudflare.com) - 提供无服务器平台
-- [GitHub Achievements List](https://github.com/drknzz/GitHub-Achievements) - 提供完整的成就文档
-- [TypeScript](https://www.typescriptlang.org) - 提供类型化的 JavaScript
-- [Vitest](https://vitest.dev) - 提供测试框架
-- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) - 提供开发和部署工具
-- [pnpm](https://pnpm.io) - 提供快速的包管理器
+- [GitHub][22] - 提供成就系统
+- [Cloudflare Workers][23] - 提供无服务器平台
+- [GitHub Achievements List][24] - 提供完整的成就文档
+- [TypeScript][25] - 提供类型化的 JavaScript
+- [Vitest][26] - 提供测试框架
+- [Wrangler][27] - 提供开发和部署工具
+- [pnpm][28] - 提供快速的包管理器
+
+[1]: https://github.com/wangrunlin/github-achievements-api/blob/main/LICENSE
+[2]: https://github.com/wangrunlin/github-achievements-api/blob/main/package.json
+[3]: https://github.com/wangrunlin/github-achievements-api/commits
+[4]: https://github.com/wangrunlin/github-achievements-api/actions
+[5]: https://nodejs.org
+[6]: https://www.typescriptlang.org/
+[7]: https://github.com/prettier/prettier
+[8]: https://makeapullrequest.com
+[9]: https://github.com/wangrunlin/github-achievements-api/stargazers
+[10]: https://github.com/wangrunlin/github-achievements-api/network
+[11]: https://github.com/wangrunlin/github-achievements-api/issues
+[12]: https://github.com/wangrunlin/github-achievements-api
+[13]: https://ko-fi.com/wangrunlin
+[14]: README.md
+[15]: https://github-achievements-api.wangrunlin.workers.dev
+[16]: https://deploy.workers.cloudflare.com/?url=https://github.com/wangrunlin/github-achievements-api
+[17]: https://ko-fi.com/wangrunlin
+[18]: https://alin.run/sponsor
+[19]: https://github.com/wangrunlin/github-achievements-api/issues/new
+[20]: https://github.com/wangrunlin
+[21]: https://github.com/drknzz/GitHub-Achievements
+[22]: https://github.com
+[23]: https://workers.cloudflare.com
+[24]: https://github.com/drknzz/GitHub-Achievements
+[25]: https://www.typescriptlang.org
+[26]: https://vitest.dev
+[27]: https://developers.cloudflare.com/workers/wrangler/
+[28]: https://pnpm.io
